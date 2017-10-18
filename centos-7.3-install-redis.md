@@ -7,6 +7,7 @@ tar zxf redis-{version}.tar.gz
 ### 安装依赖
 ```
 yum update -y
+yum -y install epel-release
 yum -y install gcc gcc-c++ jemalloc
 ```
 
