@@ -15,7 +15,7 @@ yum -y install gcc gcc-c++ jemalloc
 ```
 cd redis-{version}
 make
-#make PREFIX=/opt/redis 指定安装目录
+#make PREFIX=/opt/redis install 指定安装目录
 ```
 
 ### test
