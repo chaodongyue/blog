@@ -35,6 +35,6 @@ cp /tmp/redis-{version}/utils/redis_init_script /etc/init.d/redis
 ```
 设置为开机启动
 ```
-systemctl enable redis
+chkconfig redis on
 ```
 
