@@ -4,35 +4,54 @@ jcmd <pid> PerfCounter.print 等于 jstat -snap <pid>
 ### 用python转换成json格式
 ```python
 #!/usr/bin/python3
+import os,sys,json,time
 
-import sys,json,re,getopt
+# 转换成json并保存
+def appendToFile(newStr,outPutFile):
+  index = newStr.index("\n");
+  newStr = newStr[index+1:-1]
+  paramList=newStr.splitlines()
+  jsonObj={}
+  for item in paramList :
+      itemList = item.split("=")
+      val = itemList[1].replace("\"","")
+      try :
+          val  = int(val)
+      except ValueError:
+          try:
+            val = float(val)
+          except ValueError:
+            val = val
+      jsonObj[itemList[0]] = val
+  jsonStr = json.dumps(jsonObj)
+  f = open(outPutFile, "a")
+  f.write(jsonStr+"\n")
+  f.close()
 
-if len(sys.argv) < 2 :
-    print("缺少参数")
-    sys.exit(2)
+def readSourceData(appId):
+  cmd = "jcmd " + appId + " PerfCounter.print"
+  pcOut = os.popen(cmd)
+  pcStr = pcOut.read()
+  return pcStr
+  appendToFile(pcStr,appendFile)
 
-bi = sys.stdin.buffer.read()
-newStr = bytes.decode(bi)
-index = newStr.index("\n");
-newStr = newStr[index+1:-1]
-paramList=newStr.splitlines()
-jsonObj={}
-for item in paramList :
-    itemList = item.split("=")
-    val = itemList[1].replace("\"","")
-    try :
-        val  = int(val)
-    except ValueError:
-        try:
-          val = float(val)
-        except ValueError:
-          val = val
-    jsonObj[itemList[0]] = val
-jsonStr = json.dumps(jsonObj)
-outPutFile=sys.argv[1]
-f = open(outPutFile, "a")
-f.write(jsonStr)
-f.close()
+def main():
+  appendFile = "/opt/data/perfcounter.json"
+  appPidPath = "/opt/data/app.pid"
+
+  os.remove(appendFile)
+
+  f = open(appPidPath, "r")
+  appId = f.read()
+  appId = appId.replace('\n','')
+
+  while True:
+    pcStr = readSourceData(appId)
+    appendToFile(pcStr,appendFile)
+    time.sleep(1)
+
+
+main()
 ```
 ### 输出属性参考
 ```
