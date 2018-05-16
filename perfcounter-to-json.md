@@ -7,6 +7,31 @@ jcmd \<pid\> PerfCounter.print 等于 jstat -snap \<pid\>
 import os,sys,json,time
 
 # 转换成json并保存
+#!/usr/bin/python3
+import os,sys,json,time
+
+#转换数据类型
+def convertDataType(val):
+  itemIndex = val.find("\"")
+  if itemIndex == -1 :
+    try :
+      val  = int(val)
+    except ValueError:
+      try:
+        val = float(val)
+      except ValueError:
+        val = val
+  else :
+    val = val.replace("\"","")
+  return val
+
+#转换字段层级
+def keyHandler(key):
+  appendTotal = ["sun.cls.appClassLoadTime","sun.cls.defineAppClassTime","sun.cls.classVerifyTime","sun.cls.classLinkedTime","sun.cls.parseClassTime","sun.cls.classInitTime"]
+  if appendTotal.count(key) > 0 :
+    key += ".total"
+  return key
+# 转换成json并保存
 def appendToFile(newStr,outPutFile):
   index = newStr.index("\n");
   newStr = newStr[index+1:-1]
@@ -14,15 +39,11 @@ def appendToFile(newStr,outPutFile):
   jsonObj={}
   for item in paramList :
       itemList = item.split("=")
-      val = itemList[1].replace("\"","")
-      try :
-          val  = int(val)
-      except ValueError:
-          try:
-            val = float(val)
-          except ValueError:
-            val = val
-      jsonObj[itemList[0]] = val
+      val = itemList[1]
+      val = convertDataType(val)
+      key = itemList[0]
+      key = keyHandler(key)
+      jsonObj[key] = val
   jsonStr = json.dumps(jsonObj)
   f = open(outPutFile, "a")
   f.write(jsonStr+"\n")
@@ -39,8 +60,6 @@ def main():
   appendFile = "/opt/data/perfcounter.json"
   appPidPath = "/opt/data/app.pid"
 
-  os.remove(appendFile)
-
   f = open(appPidPath, "r")
   appId = f.read()
   appId = appId.replace('\n','')
@@ -48,7 +67,7 @@ def main():
   while True:
     pcStr = readSourceData(appId)
     appendToFile(pcStr,appendFile)
-    time.sleep(1)
+  time.sleep(10)
 
 
 main()
