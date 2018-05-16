@@ -6,9 +6,7 @@ jcmd \<pid\> PerfCounter.print 等于 jstat -snap \<pid\>
 #!/usr/bin/python3
 import os,sys,json,time
 
-# 转换成json并保存
-#!/usr/bin/python3
-import os,sys,json,time
+#转换成json并保存
 
 #转换数据类型
 def convertDataType(val):
