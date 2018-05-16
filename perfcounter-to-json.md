@@ -4,68 +4,74 @@ jcmd \<pid\> PerfCounter.print 等于 jstat -snap \<pid\>
 ### 用python转换成json格式,每10秒收集一次
 ```python
 #!/usr/bin/python3
-import os,sys,json,time
+import json
+import os
+import time
 
-#转换成json并保存
 
-#转换数据类型
-def convertDataType(val):
-  itemIndex = val.find("\"")
-  if itemIndex == -1 :
-    try :
-      val  = int(val)
-    except ValueError:
-      try:
-        val = float(val)
-      except ValueError:
-        val = val
-  else :
-    val = val.replace("\"","")
-  return val
-
-#转换字段层级
-def keyHandler(key):
-  appendTotal = ["sun.cls.appClassLoadTime","sun.cls.defineAppClassTime","sun.cls.classVerifyTime","sun.cls.classLinkedTime","sun.cls.parseClassTime","sun.cls.classInitTime"]
-  if appendTotal.count(key) > 0 :
-    key += ".total"
-  return key
 # 转换成json并保存
-def appendToFile(newStr,outPutFile):
-  index = newStr.index("\n");
-  newStr = newStr[index+1:-1]
-  paramList=newStr.splitlines()
-  jsonObj={}
-  for item in paramList :
-      itemList = item.split("=")
-      val = itemList[1]
-      val = convertDataType(val)
-      key = itemList[0]
-      key = keyHandler(key)
-      jsonObj[key] = val
-  jsonStr = json.dumps(jsonObj)
-  f = open(outPutFile, "a")
-  f.write(jsonStr+"\n")
-  f.close()
 
-def readSourceData(appId):
-  cmd = "jcmd " + appId + " PerfCounter.print"
-  pcOut = os.popen(cmd)
-  pcStr = pcOut.read()
-  return pcStr
-  appendToFile(pcStr,appendFile)
+# 转换数据类型
+def convert_data_type(val):
+    item_index = val.find("\"")
+    if item_index == -1:
+        try:
+            val = int(val)
+        except ValueError:
+            try:
+                val = float(val)
+            except ValueError:
+                val = val
+    else:
+        val = val.replace("\"", "")
+    return val
+
+
+# 转换字段层级
+def key_handler(key):
+    append_total = ["sun.cls.appClassLoadTime", "sun.cls.defineAppClassTime", "sun.cls.classVerifyTime",
+                    "sun.cls.classLinkedTime", "sun.cls.parseClassTime", "sun.cls.classInitTime"]
+    if append_total.count(key) > 0:
+        key += ".total"
+    return key
+
+
+# 转换成json并保存
+def append_to_file(new_str, output_file):
+    index = new_str.index("\n")
+    new_str = new_str[index + 1:-1]
+    param_list = new_str.splitlines()
+    json_obj = {}
+    for item in param_list:
+        item_list = item.split("=")
+        val = item_list[1]
+        val = convert_data_type(val)
+        key = item_list[0]
+        key = key_handler(key)
+        json_obj[key] = val
+    json_str = json.dumps(json_obj)
+    f = open(output_file, "a")
+    f.write(json_str + "\n")
+    f.close()
+
+
+def read_source_data(app_pid):
+    cmd = "jcmd " + app_pid + " PerfCounter.print"
+    pc_str = os.popen(cmd).read()
+    return pc_str
+
 
 def main():
-  appendFile = "/opt/data/perfcounter.json"
-  appPidPath = "/opt/data/app.pid"
+    append_file = "/opt/data/perfcounter.json"
+    app_pid_path = "/opt/data/app.pid"
 
-  f = open(appPidPath, "r")
-  appId = f.read()
-  appId = appId.replace('\n','')
+    f = open(app_pid_path, "r")
+    app_pid = f.read().replace('\n', '')
 
-  while True:
-    pcStr = readSourceData(appId)
-    appendToFile(pcStr,appendFile)
-    time.sleep(10)
+    while True:
+        pc_str = read_source_data(app_pid)
+        append_to_file(pc_str, append_file)
+        time.sleep(10)
 
 
 main()
