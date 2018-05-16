@@ -67,7 +67,7 @@ def main():
   while True:
     pcStr = readSourceData(appId)
     appendToFile(pcStr,appendFile)
-  time.sleep(10)
+    time.sleep(10)
 
 
 main()
