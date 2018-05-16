@@ -1,7 +1,7 @@
 ### 输出计数器
 jcmd \<pid\> PerfCounter.print 等于 jstat -snap \<pid\>
 
-### 用python转换成json格式,每秒收集一次
+### 用python转换成json格式,每10秒收集一次
 ```python
 #!/usr/bin/python3
 import os,sys,json,time
