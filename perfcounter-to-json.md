@@ -111,13 +111,13 @@ sun.gc.generation.0.agetable.*
 // Young GC collection count
 sun.gc.collector.0.invocations = 1868
 
-// Total young GC time
+// Total young GC time 纳秒
 sun.gc.collector.0.time = 49520297
 
 // Old GC collection count
 sun.gc.collector.1.invocations = 68
 
-// Total Old GC time
+// Total Old GC time 纳秒
 sun.gc.collector.1.time = 68420228
 
 // Number of contended synchronizations
