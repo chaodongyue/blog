@@ -110,7 +110,7 @@ iptables -I INPUT -p udp --dport 443 -j ACCEPT
 
 ***
 参考  
-https://www.zxc.so/shadowsocks-ladder.html
-https://teddysun.com/339.html
-https://www.shadowsocks.org/en/config/advanced.html
+https://www.zxc.so/shadowsocks-ladder.html  
+https://teddysun.com/339.html  
+https://www.shadowsocks.org/en/config/advanced.html  
 https://github.com/iMeiji/shadowsocks_install/wiki/shadowsocks-optimize
