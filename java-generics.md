@@ -18,7 +18,7 @@ list = new ArrayList<X>();
 
 “读”的时候由于list实际存放是T的任意子类都可以转换成T，所以都可以安全转换
 
-“写”的时候就确定不了能不能存放了，例如A和B都是T的子类，赋值是list = new ArrayList<A>()，显然List<A>是存放
+“写”的时候就确定不了能不能存放了，例如A和B都是T的子类，赋值是```list = new ArrayList<A>()```，显然List<A>是存放
 不了B。鉴于这么不确定性编译器是处理不了，也会导致类型错误。（add(null) 是没问题的）
 
 ### ```<? spuer T>```
