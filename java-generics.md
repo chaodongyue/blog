@@ -18,7 +18,7 @@ list = new ArrayList<X>();
 
 “读”的时候由于list实际存放是T的任意子类都可以转换成T，所以都可以安全转换
 
-“写”的时候就确定不了能不能存放了，例如A和B都是T的子类，赋值是```list = new ArrayList<A>()```，显然List<A>是存放
+“写”的时候就确定不了能不能存放了，例如A和B都是T的子类，赋值是```List<? extend T> list = new ArrayList<A>()```，显然List<A>是存放
 不了B。鉴于这么不确定性编译器是处理不了，也会导致类型错误。（add(null) 是没问题的）
 
 ### ```<? spuer T>```
@@ -29,7 +29,7 @@ List<? spuer T> list;
 
 赋值：list 只能赋值 T 的超类，“界”是T以上类
 
-读：list存放的是超类，那么读就会存在不确定是哪个超类，只能读出所有的超类Object
+读：A和B都是T的超类, ```List<? super T> ``存放的是T超类，那么读就会存在不确定是哪个超类(A or B)，只能读出所有的超类Object
 
 写：由于超类的“下界”是T，那么list可以存放任何T的子类是没问题，因为子类转换成父类T
 
