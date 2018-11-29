@@ -68,35 +68,29 @@ public class StreamSXSSFWorkbook extends SXSSFWorkbook {
     private Consumer<Sheet> sheetConsumer;
 
 
-    public StreamSXSSFWorkbook(Consumer<Sheet> sheetConsumer) {
+    public StreamSXSSFWorkbook() {
         super();
-        this.sheetConsumer = sheetConsumer;
     }
 
-    public StreamSXSSFWorkbook(XSSFWorkbook workbook, Consumer<Sheet> sheetConsumer) {
+    public StreamSXSSFWorkbook(XSSFWorkbook workbook) {
         super(workbook);
-        this.sheetConsumer = sheetConsumer;
     }
 
-    public StreamSXSSFWorkbook(XSSFWorkbook workbook, int rowAccessWindowSize, Consumer<Sheet> sheetConsumer) {
+    public StreamSXSSFWorkbook(XSSFWorkbook workbook, int rowAccessWindowSize) {
         super(workbook, rowAccessWindowSize);
-        this.sheetConsumer = sheetConsumer;
     }
 
-    public StreamSXSSFWorkbook(XSSFWorkbook workbook, int rowAccessWindowSize, boolean compressTmpFiles, Consumer<Sheet> sheetConsumer) {
+    public StreamSXSSFWorkbook(XSSFWorkbook workbook, int rowAccessWindowSize, boolean compressTmpFiles) {
         super(workbook, rowAccessWindowSize, compressTmpFiles);
-        this.sheetConsumer = sheetConsumer;
     }
 
     public StreamSXSSFWorkbook(XSSFWorkbook workbook, int rowAccessWindowSize, boolean compressTmpFiles,
-                               boolean useSharedStringsTable, Consumer<Sheet> sheetConsumer) {
+                               boolean useSharedStringsTable) {
         super(workbook, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
-        this.sheetConsumer = sheetConsumer;
     }
 
-    public StreamSXSSFWorkbook(int rowAccessWindowSize, Consumer<Sheet> sheetConsumer) {
+    public StreamSXSSFWorkbook(int rowAccessWindowSize) {
         super(rowAccessWindowSize);
-        this.sheetConsumer = sheetConsumer;
     }
 
     @Override
@@ -248,5 +242,9 @@ public class StreamSXSSFWorkbook extends SXSSFWorkbook {
      */
     private Field findField(Class<?> clazz, String name) {
         return ReflectionUtils.findField(clazz, name);
+    }
+
+    public void setSheetConsumer(Consumer<Sheet> sheetConsumer) {
+        this.sheetConsumer = sheetConsumer;
     }
 }
